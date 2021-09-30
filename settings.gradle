@@ -1,0 +1,2 @@
+rootProject.name = "WhoHaveMyMoney"
+include ':app'
