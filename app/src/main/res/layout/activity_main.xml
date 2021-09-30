@@ -161,10 +161,14 @@
                 android:id="@+id/editTextDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="16"
-                android:text="yyyy년 mm월 dd일 hh시 mm분"
+                android:ems="10"
+                android:clickable="true"
+                android:inputType="none"
+                android:focusable="false"
+                android:text="yyyy년 mm월 dd일"
                 android:textSize="16sp" />
 
+            <!--시분초까지는 필요없어서 삭제-->
 
         </LinearLayout>
 
