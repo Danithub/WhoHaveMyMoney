@@ -1,14 +1,14 @@
 package com.dandroid.whohavemymoney
 
 import android.app.DatePickerDialog
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.*
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import java.text.DecimalFormat
@@ -26,10 +26,6 @@ class MainActivity : AppCompatActivity() {
         findViewById<EditText>(R.id.editTextPlace)
     }
 
-    private val editTextPayment by lazy{
-        findViewById<EditText>(R.id.editTextPayment)
-    }
-
     private val editTextDate by lazy{
         findViewById<EditText>(R.id.editTextDate)
     }
@@ -38,11 +34,17 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.buttonClear)
     }
 
+    private val spinnerPayment by lazy{
+        findViewById<Spinner>(R.id.spinnerPayment)
+    }
+
     private var priceString = ""
     private var dateString = ""
 
+    //TODO 거래이력 구분하여 조회 및 저장 구현
     //TODO 홈(캘린더) 화면
     //TODO 홈 버튼 클릭시 캘린더 화면으로 이동
+    //TODO 홈(리스트) 화면 (지출, 수입, 이체 선택해서 해당 항목을 리스트로 보여줌.)
     //TODO 지불방식이 정해져 있지 않은 항목에 대해선 상단에 알림과 하단 메세지 클릭 시 해당 로우로 이동
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +55,18 @@ class MainActivity : AppCompatActivity() {
         val today = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE)
         val arrToday = today.split("-")
         editTextDate.setText(getDateString(arrToday))
+
+        editTextDate.setOnFocusChangeListener(object : View.OnFocusChangeListener {
+            override fun onFocusChange(view: View, hasFocus: Boolean) {
+                if (hasFocus) {
+                    //  .. 포커스시
+                } else {
+                    //  .. 포커스 뺏겼을 때
+                    // TODO 키보드 숨기기
+                    view.hideKeyboard()
+                }
+            }
+        })
 
         //사용 금액 입력 시 천원 단위 반점 표시
         editTextPrice.addTextChangedListener(object : TextWatcher {
@@ -73,13 +87,13 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        //TODO 지불 방식 선택
+        //지불 방식 선택
         val payment = resources.getStringArray(R.array.PaymentList)
 
-        editTextPayment.setOnClickListener {
+        spinnerPayment.adapter = ArrayAdapter.createFromResource(this, R.array.PaymentList, R.layout.support_simple_spinner_dropdown_item)
 
-            //TODO 마지막 입력 값 기억하기
-        }
+        //TODO 지불 방식 추가 제거
+        //TODO 마지막 입력 값 기억하기
 
         // 사용 날짜 클릭 시 DatePicker Popup
         editTextDate.setOnClickListener {
@@ -116,6 +130,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun View.hideKeyboard() {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
+    }
 
     private fun getDateString(listDate:List<String>):String{
         if(listDate.size != 3){
