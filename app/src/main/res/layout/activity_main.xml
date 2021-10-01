@@ -67,12 +67,19 @@
                 android:layout_height="wrap_content"
                 android:text="지불 방식" />
 
+            <Spinner
+                android:id="@+id/spinnerPayment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
             <EditText
                 android:id="@+id/editTextPayment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="15"
-                android:text="신한 네이버페이 체크카드" />
+                android:clickable="true"
+                android:focusable="false"
+                android:inputType="none"
+                android:text="체크카드" />
 
         </LinearLayout>
 

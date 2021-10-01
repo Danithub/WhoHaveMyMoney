@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string-array name="PaymentList">
-        <item>현금</item>
-        <item>카카오페이</item>
-        <item>신한 네이버페이 체크카드</item>
-    </string-array>
-</resources>

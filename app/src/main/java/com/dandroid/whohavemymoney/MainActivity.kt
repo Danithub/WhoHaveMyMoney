@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
@@ -20,6 +22,10 @@ class MainActivity : AppCompatActivity() {
         findViewById<EditText>(R.id.editTextPrice)
     }
 
+    private val editTextPlace by lazy{
+        findViewById<EditText>(R.id.editTextPlace)
+    }
+
     private val editTextPayment by lazy{
         findViewById<EditText>(R.id.editTextPayment)
     }
@@ -28,19 +34,16 @@ class MainActivity : AppCompatActivity() {
         findViewById<EditText>(R.id.editTextDate)
     }
 
+    private val buttonClear by lazy{
+        findViewById<Button>(R.id.buttonClear)
+    }
+
     private var priceString = ""
     private var dateString = ""
+
+    //TODO 홈(캘린더) 화면
     //TODO 홈 버튼 클릭시 캘린더 화면으로 이동
     //TODO 지불방식이 정해져 있지 않은 항목에 대해선 상단에 알림과 하단 메세지 클릭 시 해당 로우로 이동
-
-    private fun getDateString(listDate:List<String>):String{
-        if(listDate.size != 3){
-            Toast.makeText(this, "날짜 형식이 잘못되었습니다.", Toast.LENGTH_SHORT).show()
-            return "0000년 00월 00일"
-        }
-
-        return listDate[0]+"년 " +listDate[1]+"월 " +listDate[2]+"일"
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +74,8 @@ class MainActivity : AppCompatActivity() {
         })
 
         //TODO 지불 방식 선택
+        val payment = resources.getStringArray(R.array.PaymentList)
+
         editTextPayment.setOnClickListener {
 
             //TODO 마지막 입력 값 기억하기
@@ -92,6 +97,32 @@ class MainActivity : AppCompatActivity() {
             cal.set(year,month -1,day)
             DatePickerDialog(this, dateSetListener, cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH)).show()
         }
+
+        // 초기화 버튼
+        buttonClear.setOnClickListener{
+
+            // 지불 방식
+
+            // 사용처
+            editTextPlace.setText("")
+
+            // 금액
+            editTextPrice.setText("0")
+
+            // 사용일자
+            val today = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE)
+            val arrToday = today.split("-")
+            editTextDate.setText(getDateString(arrToday))
+        }
     }
 
+
+    private fun getDateString(listDate:List<String>):String{
+        if(listDate.size != 3){
+            Toast.makeText(this, "날짜 형식이 잘못되었습니다.", Toast.LENGTH_SHORT).show()
+            return "0000년 00월 00일"
+        }
+
+        return listDate[0]+"년 " +listDate[1]+"월 " +listDate[2]+"일"
+    }
 }
