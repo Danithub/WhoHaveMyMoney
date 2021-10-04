@@ -2,6 +2,7 @@ package com.dandroid.whohavemymoney
 
 import android.app.DatePickerDialog
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -30,6 +31,10 @@ class MainActivity : AppCompatActivity() {
         findViewById<EditText>(R.id.editTextDate)
     }
 
+    private val buttonHome by lazy{
+        findViewById<Button>(R.id.buttonHome)
+    }
+
     private val buttonClear by lazy{
         findViewById<Button>(R.id.buttonClear)
     }
@@ -42,8 +47,6 @@ class MainActivity : AppCompatActivity() {
     private var dateString = ""
 
     //TODO 거래이력 구분하여 조회 및 저장 구현
-    //TODO 홈(캘린더) 화면
-    //TODO 홈 버튼 클릭시 캘린더 화면으로 이동
     //TODO 홈(리스트) 화면 (지출, 수입, 이체 선택해서 해당 항목을 리스트로 보여줌.)
     //TODO 지불방식이 정해져 있지 않은 항목에 대해선 상단에 알림과 하단 메세지 클릭 시 해당 로우로 이동
 
@@ -127,6 +130,11 @@ class MainActivity : AppCompatActivity() {
             val today = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE)
             val arrToday = today.split("-")
             editTextDate.setText(getDateString(arrToday))
+        }
+
+        buttonHome.setOnClickListener {
+            val homeIntent = Intent(this, CalendarActivity::class.java)
+            startActivity(homeIntent)
         }
     }
 
