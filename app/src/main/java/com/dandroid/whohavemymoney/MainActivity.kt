@@ -135,6 +135,9 @@ class MainActivity : AppCompatActivity() {
         buttonHome.setOnClickListener {
             val homeIntent = Intent(this, CalendarActivity::class.java)
             startActivity(homeIntent)
+            overridePendingTransition(0, R.anim.ver_fade_out)
+
+            finish()
         }
     }
 

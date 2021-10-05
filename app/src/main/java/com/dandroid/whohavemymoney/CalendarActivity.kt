@@ -18,6 +18,8 @@ class CalendarActivity : AppCompatActivity() {
         buttonAdd.setOnClickListener{
             val addIntent = Intent(this, MainActivity::class.java)
             startActivity(addIntent)
+            overridePendingTransition(R.anim.fadein, R.anim.hold)
+
         }
     }
 }
