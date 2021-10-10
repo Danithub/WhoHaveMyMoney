@@ -126,59 +126,57 @@ class MainActivity : AppCompatActivity() {
 
         //TODO 지불 방식 추가 제거
         //TODO 마지막 입력 값 기억하기
+    }
 
+    fun dateEditTextClicked(v:View){
         // 사용 날짜 클릭 시 DatePicker Popup
-        editTextDate.setOnClickListener {
-            val cal = Calendar.getInstance()    //캘린더뷰 만들기
-            val dateSetListener =
-                DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                    dateString = "${year}년 ${month + 1}월 ${dayOfMonth}일"
-                    editTextDate.setText(dateString)
-                }
+        val cal = Calendar.getInstance()    //캘린더뷰 만들기
+        val dateSetListener =
+            DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+                dateString = "${year}년 ${month + 1}월 ${dayOfMonth}일"
+                editTextDate.setText(dateString)
+            }
 
-            // EditText의 날짜가 기본값
-            val date = editTextDate.text.toString()
-            val year = date.substring(0, 4).toInt()
-            val month = date.substring(date.indexOf("년") + 1, date.indexOf("월")).trim().toInt()
-            val day = date.substring(date.indexOf("월") + 1, date.indexOf("일")).trim().toInt()
-            cal.set(year, month - 1, day)
-            DatePickerDialog(
-                this,
-                dateSetListener,
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH)
-            ).show()
-        }
+        // EditText의 날짜가 기본값
+        val date = editTextDate.text.toString()
+        val year = date.substring(0, 4).toInt()
+        val month = date.substring(date.indexOf("년") + 1, date.indexOf("월")).trim().toInt()
+        val day = date.substring(date.indexOf("월") + 1, date.indexOf("일")).trim().toInt()
+        cal.set(year, month - 1, day)
+        DatePickerDialog(
+            this,
+            dateSetListener,
+            cal.get(Calendar.YEAR),
+            cal.get(Calendar.MONTH),
+            cal.get(Calendar.DAY_OF_MONTH)
+        ).show()
+    }
 
-        // 초기화 버튼
-        buttonClear.setOnClickListener {
+    fun clearButtonClicked(v:View){
 
-            // 거래 구분
-            gubun = Gubun.None
+        // 거래 구분
+        gubun = Gubun.None
 
-            // 지불 방식
+        // 지불 방식
 
-            // 사용처
-            editTextPlace.setText("")
+        // 사용처
+        editTextPlace.setText("")
 
-            // 금액
-            editTextPrice.setText("0")
+        // 금액
+        editTextPrice.setText("0")
 
-            // 사용일자
-            val today = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE)
-            val arrToday = today.split("-")
-            editTextDate.setText(getDateString(arrToday))
-        }
+        // 사용일자
+        val today = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE)
+        val arrToday = today.split("-")
+        editTextDate.setText(getDateString(arrToday))
+    }
 
-        buttonHome.setOnClickListener {
-            val homeIntent = Intent(this, CalendarActivity::class.java)
-            startActivity(homeIntent)
-            overridePendingTransition(0, R.anim.ver_fade_out)
+    fun homeButtonClicked(v :View){
+        val homeIntent = Intent(this, CalendarActivity::class.java)
+        startActivity(homeIntent)
+        overridePendingTransition(0, R.anim.ver_fade_out)
 
-            finish()
-        }
-
+        finish()
     }
 
     fun saveButtonClicked(v: View) {

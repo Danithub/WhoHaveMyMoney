@@ -165,6 +165,7 @@
                 android:inputType="none"
                 android:focusable="false"
                 android:text="yyyy년 mm월 dd일"
+                android:onClick="dateEditTextClicked"
                 android:textSize="16sp" />
 
             <!--시분초까지는 필요없어서 삭제-->
@@ -186,6 +187,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:onClick="homeButtonClicked"
             android:text="홈" />
 
         <Button
@@ -201,6 +203,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:onClick="clearButtonClicked"
             android:text="초기화" />
 
     </LinearLayout>
