@@ -14,6 +14,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.room.Room
 import com.dandroid.whohavemymoney.model.AccountData
+import com.dandroid.whohavemymoney.model.Payment
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -52,6 +53,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     lateinit var db: AppDatabase
+    lateinit var paymentDB:PaymentDatabase
 
     private var priceString = ""
     private var dateString = ""
@@ -79,53 +81,55 @@ class MainActivity : AppCompatActivity() {
             "accountDB"
         ).build()
 
+        paymentDB = Room.databaseBuilder(
+            applicationContext,
+            PaymentDatabase::class.java,
+            "paymentDB"
+        ).build()
+
         //사용 날짜 초기화
         val today = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE)
         val arrToday = today.split("-")
         editTextDate.setText(getDateString(arrToday))
 
-        editTextDate.setOnFocusChangeListener(object : View.OnFocusChangeListener {
-            override fun onFocusChange(view: View, hasFocus: Boolean) {
-                if (hasFocus) {
-                    //  .. 포커스시
-                } else {
-                    //  .. 포커스 뺏겼을 때
-                    // TODO 키보드 숨기기
-                    view.hideKeyboard()
-                }
-            }
-        })
+        editTextDate.setOnFocusChangeListener(dateFocusChangeListener)
 
         //사용 금액 입력 시 천원 단위 반점 표시
-        editTextPrice.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-            }
+        editTextPrice.addTextChangedListener(priceTextWatcher)
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+    }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.isNullOrEmpty() || s.toString() == priceString) return
+    //TODO 지불 방식 조회,추가,제거 UI
+    //TODO 조회한 지불방식 화면에 그리기
+    //TODO 마지막 입력 값 기억하기
+    private fun getAllPayment():List<Payment>{
+        return paymentDB.paymentDao().getAll()
+    }
 
-                val priceWithoutComma = editTextPrice.text.toString().replace(",", "").toLong()
-                val decimalformat = DecimalFormat("#,###")
-                priceString = decimalformat.format(priceWithoutComma)
-                editTextPrice.setText(priceString)
-                //editTextPrice.setSelection(price.length) //선택한 위치에 커서가 계속 있어야지
-            }
-        })
+    private fun addNewPayment(new : Payment){
+        paymentDB.paymentDao().insertPayment(new)
+    }
 
-        //지불 방식 선택
-        val payment = resources.getStringArray(R.array.PaymentList)
+    private fun deleteOldPayment(old : Payment){
+        paymentDB.paymentDao().deletePayment(old)
+    }
 
-        spinnerPayment.adapter = ArrayAdapter.createFromResource(
-            this,
-            R.array.PaymentList,
-            R.layout.support_simple_spinner_dropdown_item
-        )
+    private val priceTextWatcher=object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+        }
 
-        //TODO 지불 방식 추가 제거
-        //TODO 마지막 입력 값 기억하기
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            if (s.isNullOrEmpty() || s.toString() == priceString) return
+
+            val priceWithoutComma = editTextPrice.text.toString().replace(",", "").toLong()
+            val decimalformat = DecimalFormat("#,###")
+            priceString = decimalformat.format(priceWithoutComma)
+            editTextPrice.setText(priceString)
+            //editTextPrice.setSelection(price.length) //선택한 위치에 커서가 계속 있어야지
+        }
     }
 
     fun dateEditTextClicked(v:View){
@@ -217,5 +221,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         return listDate[0] + "년 " + listDate[1] + "월 " + listDate[2] + "일"
+    }
+
+    private val dateFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
+        if (hasFocus) {
+            //  .. 포커스시
+        } else {
+            //  .. 포커스 뺏겼을 때
+            // TODO 키보드 숨기기
+            view.hideKeyboard()
+        }
     }
 }
